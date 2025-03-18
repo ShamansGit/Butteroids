@@ -1,0 +1,186 @@
+[gd_scene load_steps=4 format=3 uid="uid://brbnexytapf6k"]
+
+[ext_resource type="Script" path="res://Networking/MultiplayerController.cs" id="1_7cmor"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k6la7"]
+bg_color = Color(0.152941, 0.054902, 0.0431373, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pr225"]
+bg_color = Color(0.160784, 0.14902, 0.101961, 1)
+
+[node name="MultiplayerController" type="Control" node_paths=PackedStringArray("hostButton", "joinButton", "startButton", "disconnectButton", "nameEdit", "gameLog", "submitMessageButton", "messageEdit", "portEdit", "addressEdit")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7cmor")
+hostButton = NodePath("ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Host")
+joinButton = NodePath("ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Join")
+startButton = NodePath("ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Start")
+disconnectButton = NodePath("ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Disconnect")
+nameEdit = NodePath("ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Name Entry/HBoxContainer/NameEdit")
+gameLog = NodePath("ControlPanel/HSplitContainer/TextLogPanel/VBoxContainer/Game Log")
+submitMessageButton = NodePath("ControlPanel/HSplitContainer/TextLogPanel/VBoxContainer/HBoxContainer/SubmitMessage")
+messageEdit = NodePath("ControlPanel/HSplitContainer/TextLogPanel/VBoxContainer/HBoxContainer/MessageEdit")
+portEdit = NodePath("ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Port/Port Edit")
+addressEdit = NodePath("ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Address/Address Edit")
+
+[node name="ControlPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="ControlPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LobbyPanel" type="Panel" parent="ControlPanel/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ControlPanel/HSplitContainer/LobbyPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="Game Name" type="RichTextLabel" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=50]Butteroids[/font_size]
+[color=cyan] -Made by Joe, Will and Wri-[/color]
+
+"
+fit_content = true
+
+[node name="HSeparator2" type="HSeparator" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Name Entry" type="PanelContainer" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Name Entry"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Name Entry/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Name:"
+
+[node name="NameEdit" type="LineEdit" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Name Entry/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 5.09
+placeholder_text = "Enter Your Name...."
+
+[node name="Host" type="Button" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer"]
+layout_mode = 2
+text = "Host Game"
+
+[node name="Join" type="Button" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer"]
+layout_mode = 2
+text = "Join Game"
+
+[node name="Start" type="Button" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer"]
+layout_mode = 2
+text = "Start"
+
+[node name="Label" type="Label" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "Note: To play in singleplayer mode, simply click 'Host' and then 'Start'. If you want to debug with multiple clients go to Debug>Run Multiple Instances.
+"
+autowrap_mode = 2
+
+[node name="Spacer" type="Control" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Disconnect" type="Button" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_k6la7")
+text = "Disconnect"
+
+[node name="HSeparator" type="HSeparator" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Advanced Settings" type="Label" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer"]
+layout_mode = 2
+text = "Advanced Settings"
+
+[node name="Port" type="HBoxContainer" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Port"]
+layout_mode = 2
+text = "Port:"
+
+[node name="Port Edit" type="LineEdit" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Port"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "80"
+
+[node name="Address" type="HBoxContainer" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Address"]
+layout_mode = 2
+text = "Address:"
+
+[node name="Address Edit" type="LineEdit" parent="ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Address"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "127.0.0.1"
+
+[node name="TextLogPanel" type="Panel" parent="ControlPanel/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ControlPanel/HSplitContainer/TextLogPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Game Log" type="RichTextLabel" parent="ControlPanel/HSplitContainer/TextLogPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "[color=gray]-----------Begin Text Log-----------[/color]"
+
+[node name="HSeparator" type="HSeparator" parent="ControlPanel/HSplitContainer/TextLogPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ControlPanel/HSplitContainer/TextLogPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 75)
+layout_mode = 2
+
+[node name="MessageEdit" type="TextEdit" parent="ControlPanel/HSplitContainer/TextLogPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 5.8
+placeholder_text = "Enter Your Message...
+"
+
+[node name="SubmitMessage" type="Button" parent="ControlPanel/HSplitContainer/TextLogPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 21
+theme_override_styles/normal = SubResource("StyleBoxFlat_pr225")
+text = "Chat"
