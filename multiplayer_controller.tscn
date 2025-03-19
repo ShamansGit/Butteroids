@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://brbnexytapf6k"]
 
-[ext_resource type="Script" path="res://Networking/MultiplayerController.cs" id="1_7cmor"]
+[ext_resource type="Script" uid="uid://c4tuu0k5fu36e" path="res://Networking/MultiplayerController.cs" id="1_7cmor"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k6la7"]
 bg_color = Color(0.152941, 0.054902, 0.0431373, 1)
