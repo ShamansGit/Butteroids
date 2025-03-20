@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class Asteroid : RigidBody2D
+public partial class Asteroid : Node2D
 {
     [Export]
     PackedScene[] pieces; // Array of RigidBody2D parts the asteroid can break into.
@@ -17,7 +17,7 @@ public partial class Asteroid : RigidBody2D
     // Called every frame
     public override void _Process(double delta)
     {
-        // QueueFree() should be called when the object moves off the screen
+        
     }
 
     /// <summary>
@@ -30,8 +30,17 @@ public partial class Asteroid : RigidBody2D
         Node root = GetParent();
         foreach (PackedScene pieceScene in pieces)
         {
-            RigidBody2D piece = pieceScene.Instantiate<RigidBody2D>();
-            root.AddChild(piece);
+            Node2D piece = pieceScene.Instantiate<Node2D>();
+            CallDeferred("AddChildDeferred", root, piece);
+            piece.Position = Position;
         }
+        QueueFree();
     }
+
+    // Got an error when adding a child from OnBodyEntered, calling it deferred here fixes it.
+    private void AddChildDeferred(Node parent, Node child)
+    {
+        parent.AddChild(child);
+    }
+
 }
