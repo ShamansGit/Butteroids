@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://ql51ef00k5ob"]
 
-[ext_resource type="Script" path="res://AsteroidChunk.cs" id="1_5u75e"]
+[ext_resource type="Script" uid="uid://c5nplokhr57b1" path="res://AsteroidChunk.cs" id="1_5u75e"]
 [ext_resource type="Texture2D" uid="uid://ckx2mxhrfisrt" path="res://Asteroid Chunk 0.png" id="2_0hkw0"]
 
 [node name="Asteroid Chunk" type="RigidBody2D"]

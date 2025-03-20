@@ -1,19 +1,11 @@
 using Godot;
 using System;
 
-public partial class AsteroidChunk : RigidBody2D
+public partial class AsteroidChunk : Asteroid
 {
-    // Called when the node enters the scene
-    public override void _Ready()
+    // Override to prevent the chunk breaking into more chunks
+    public override void OnBodyEntered(Node body)
     {
-        // Initialise with random speed, direction, and spin
-
-
-    }
-
-    // Called every frame
-    public override void _Process(double delta)
-    {
-        // QueueFree() should be called when the object moves off the screen
+        QueueFree();
     }
 }

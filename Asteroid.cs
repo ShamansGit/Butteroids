@@ -24,7 +24,7 @@ public partial class Asteroid : RigidBody2D
     /// Called whenever a body enters this one. Scene layers are set up such that this object can only collide with projectiles and asteroid pieces.
     /// </summary>
     /// <param name="body">The other colliding body</param>
-    public void OnBodyEntered(Node body)
+    public virtual void OnBodyEntered(Node body)
     {
         // Add all the pieces to the scene tree
         Node root = GetParent();
