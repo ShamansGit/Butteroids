@@ -1,10 +1,14 @@
 using Godot;
 using System;
+using System.Diagnostics;
 
 public partial class Asteroid : Node2D
 {
     [Export]
     PackedScene[] pieces; // Array of RigidBody2D parts the asteroid can break into.
+
+    Vector2 bounds;
+    Vector2 margin;
 
     // Called when the node enters the scene
     public override void _Ready()
@@ -12,12 +16,19 @@ public partial class Asteroid : Node2D
         // Initialise with random speed, direction, and spin
 
 
+
+        // Set up edge for wraparound
+        bounds = GetNode<Globals>("/root/Globals").mapSize;
+        margin = bounds * 0.1f;
     }
 
     // Called every frame
     public override void _Process(double delta)
     {
-        
+        Position += (Vector2.Right + Vector2.Down) * 50f * (float)delta;
+        // Hopefully more efficient than 'if' statements to check if out of bounds
+        // Effectively, p is wrapped around iff p >= bounds + margin OR p < -margin
+        Position = (Position + margin).PosMod(bounds + margin * 2) - margin;
     }
 
     /// <summary>
