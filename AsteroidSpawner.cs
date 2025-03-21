@@ -15,7 +15,7 @@ public partial class AsteroidSpawner : Node
     private float totalChance = 0f;
     private Vector2 mapSize;
     private float mapPerimeter = 0f;
-    private RandomNumberGenerator rng = new RandomNumberGenerator();
+    private RandomNumberGenerator rng = new();
 
     public override void _Process(double delta)
     {
@@ -33,6 +33,8 @@ public partial class AsteroidSpawner : Node
                 random -= asteroidsChance[index];
             }
             Asteroid asteroid = asteroids[index].Instantiate<Asteroid>();
+            // Share rng
+            asteroid.rng = rng;
             AddChild(asteroid);
             // Randomly place somewhere on the perimeter
             random = rng.RandfRange(0, mapPerimeter);
