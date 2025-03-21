@@ -1,26 +1,26 @@
 [gd_scene load_steps=5 format=3 uid="uid://ql51ef00k5ob"]
 
-[ext_resource type="Script" uid="uid://c5nplokhr57b1" path="res://AsteroidChunk.cs" id="1_5u75e"]
-[ext_resource type="Texture2D" uid="uid://ckx2mxhrfisrt" path="res://Asteroid Chunk 0.png" id="2_0hkw0"]
-[ext_resource type="Texture2D" uid="uid://b05dsm7ao5air" path="res://Asteroid Chunk 1.png" id="3_tvnyv"]
-[ext_resource type="Texture2D" uid="uid://228laq2o51co" path="res://Asteroid Chunk 2.png" id="4_2lobe"]
+[ext_resource type="Script" uid="uid://c5nplokhr57b1" path="res://Asteroids/AsteroidChunk.cs" id="1_flslb"]
+[ext_resource type="Texture2D" uid="uid://ckx2mxhrfisrt" path="res://Art/Asteroid Chunk 0.png" id="2_067yi"]
+[ext_resource type="Texture2D" uid="uid://b05dsm7ao5air" path="res://Art/Asteroid Chunk 1.png" id="3_nco52"]
+[ext_resource type="Texture2D" uid="uid://228laq2o51co" path="res://Art/Asteroid Chunk 2.png" id="4_ujadp"]
 
 [node name="Asteroid Chunk" type="Node2D"]
-script = ExtResource("1_5u75e")
+script = ExtResource("1_flslb")
 
 [node name="Sprites" type="Node2D" parent="."]
 
 [node name="Sprite2D" type="Sprite2D" parent="Sprites"]
 scale = Vector2(0.05, 0.05)
-texture = ExtResource("2_0hkw0")
+texture = ExtResource("2_067yi")
 
 [node name="Sprite2D2" type="Sprite2D" parent="Sprites"]
 scale = Vector2(0.05, 0.05)
-texture = ExtResource("3_tvnyv")
+texture = ExtResource("3_nco52")
 
 [node name="Sprite2D3" type="Sprite2D" parent="Sprites"]
 scale = Vector2(0.05, 0.05)
-texture = ExtResource("4_2lobe")
+texture = ExtResource("4_ujadp")
 
 [node name="Area2D" type="Area2D" parent="."]
 monitoring = false

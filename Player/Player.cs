@@ -17,7 +17,6 @@ public partial class Player : CharacterBody2D
 	public override void _Ready()
 	{
 		base._Ready();
-		bodyent
 	}
 	public void SetMultiplayer(int id, PlayerInfo info)
 	{
@@ -70,4 +69,13 @@ public partial class Player : CharacterBody2D
 
 		MoveAndSlide();
 	}
+
+    public void Hit()
+    {
+		if (hasControl){
+			//hasControl = false;
+			//Hide();
+		}
+    }
+
 }

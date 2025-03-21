@@ -10,6 +10,7 @@ public partial class AsteroidSpawner : Node
     PackedScene[] asteroids;
     [Export]
     float[] asteroidsChance;
+    [Export] int maxAsteroids = 30;
 
     private float timePasssedSinceSpawn = 0f;
     private float totalChance = 0f;
@@ -19,6 +20,9 @@ public partial class AsteroidSpawner : Node
 
     public override void _Process(double delta)
     {
+        //puts a cap on how many asteroids can spawn
+        if (Asteroid.asteroidCount > maxAsteroids) return;
+
         timePasssedSinceSpawn += (float)delta;
         if ((int)(timePasssedSinceSpawn / spawnFrequency) > 0)
         {
