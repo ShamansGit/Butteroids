@@ -6,17 +6,18 @@ public partial class Asteroid : Node2D
 {
     [Export]
     PackedScene[] pieces; // Array of RigidBody2D parts the asteroid can break into.
-
+    [Export] float speed = 10;
     Vector2 bounds;
     Vector2 margin;
-    public RandomNumberGenerator rng;
+    Vector2 velocity;
 
     // Called when the node enters the scene
     public override void _Ready()
     {
         // Initialise with random speed, direction, and spin
 
-
+        Vector2 direction = new Vector2((float)GD.RandRange(-1.0,1.0),(float)GD.RandRange(-1.0,1.0)).Normalized();
+        velocity = direction * speed;
 
         // Set up edge for wraparound
         bounds = GetNode<Globals>("/root/Globals").mapSize;
@@ -24,9 +25,9 @@ public partial class Asteroid : Node2D
 
         // Random sprite and corresponding hitbox
         int nOptions = GetNode("Sprites").GetChildCount();
+        int number = GD.RandRange(0, nOptions - 1);
         Debug.Assert(nOptions == GetNode("Area2D/CollisionShapes").GetChildCount(), "Mismatched number of sprites/hitboxes");
         Debug.Assert(nOptions > 0, "Asteroid must have at least 1 sprite");
-        int number = rng.RandiRange(0, nOptions - 1);
         Node hitbox = GetNode("Area2D/CollisionShapes").GetChild(number);
         Node sprite = GetNode("Sprites").GetChild(number);
         for (int i = 0; i < nOptions; i++)
@@ -44,9 +45,12 @@ public partial class Asteroid : Node2D
     }
 
     // Called every frame
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         // Hopefully more efficient than 'if' statements to check if out of bounds
+
+        Position += velocity * (float)delta;
+
         // Effectively, p is wrapped around iff p >= bounds + margin OR p < -margin
         Position = (Position + margin).PosMod(bounds + margin * 2) - margin;
     }
@@ -62,7 +66,7 @@ public partial class Asteroid : Node2D
         foreach (PackedScene pieceScene in pieces)
         {
             Asteroid piece = pieceScene.Instantiate<Asteroid>();
-            piece.rng = rng;
+            //piece.rng = rng;
             CallDeferred("AddChildDeferred", root, piece);
             piece.Position = Position;
         }

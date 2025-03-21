@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://coa6yw103pv6x"]
+
+[ext_resource type="Script" uid="uid://crvw60682olyg" path="res://Networking/MatchManager.cs" id="1_d5qyo"]
+[ext_resource type="PackedScene" uid="uid://h5wsyc556w1u" path="res://Player/player.tscn" id="2_p6xok"]
+
+[node name="MatchManager" type="Node2D"]
+script = ExtResource("1_d5qyo")
+playerScene = ExtResource("2_p6xok")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true

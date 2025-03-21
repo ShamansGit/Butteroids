@@ -34,7 +34,7 @@ public partial class AsteroidSpawner : Node
             }
             Asteroid asteroid = asteroids[index].Instantiate<Asteroid>();
             // Share rng
-            asteroid.rng = rng;
+            //asteroid.rng = rng;
             AddChild(asteroid);
             // Randomly place somewhere on the perimeter
             random = rng.RandfRange(0, mapPerimeter);

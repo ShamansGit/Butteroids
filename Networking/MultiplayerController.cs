@@ -83,7 +83,7 @@ public partial class MultiplayerController : Control
     {
         PrintStatus("Connected to Server!","green");
 		// Id of "1" means that the RPC will only run on the host.
-		RpcId(1,nameof(SendPlayerInformation), nameEdit.Text,Multiplayer.GetUniqueId());
+		RpcId(1,nameof(SendPlayerInformation), nameEdit.Text,Multiplayer.GetUniqueId(),-1);
 		UpdateUiState(UIState.ConnectedAsClient);
     }
 
@@ -109,10 +109,12 @@ public partial class MultiplayerController : Control
 	{
 	}
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-	private void SendPlayerInformation(string name,int id){
+	private void SendPlayerInformation(string name,int id,int playerInstanceNumber = -1){
 		PlayerInfo playerInfo = new PlayerInfo(){
 			Name = name,
-			//Id = id,
+			//if playerInstanceNumber == -1, then use UniquePlayerInstances as number instead
+			//this will ensure a unique player colour for each player
+			color = GameManager.GeneratePlayerColor(playerInstanceNumber == -1 ? GameManager.UniquePlayerInstances : playerInstanceNumber)
 		};
 
 		if (!GameManager.Players.ContainsKey(id)){
@@ -122,7 +124,8 @@ public partial class MultiplayerController : Control
 		if (Multiplayer.IsServer()){
 			foreach (int idKey in GameManager.Players.Keys)
 			{
-				Rpc(nameof(SendPlayerInformation),GameManager.Players[idKey].Name,idKey);
+				Rpc(nameof(SendPlayerInformation),GameManager.Players[idKey].Name,idKey,GameManager.UniquePlayerInstances - 1);
+				GameManager.UniquePlayerInstances += 1;
 			}
 		}
 	}
@@ -138,7 +141,7 @@ public partial class MultiplayerController : Control
 
 		//Sets peer as yourself, so you can play your own game as a host
 		Multiplayer.MultiplayerPeer = peer;
-		SendPlayerInformation(nameEdit.Text,1);
+		SendPlayerInformation(nameEdit.Text,1,0);
 
 		PrintStatus("Waiting For Players...");
 

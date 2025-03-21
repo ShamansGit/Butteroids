@@ -1,7 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://6nvwgy4x3u14"]
+[gd_scene load_steps=3 format=3 uid="uid://6nvwgy4x3u14"]
 
 [ext_resource type="PackedScene" uid="uid://0vpq4r6i1ffa" path="res://asteroid_spawner.tscn" id="1_0f027"]
+[ext_resource type="PackedScene" uid="uid://coa6yw103pv6x" path="res://Networking/match_manager.tscn" id="2_2c62f"]
 
 [node name="MainScene" type="Node2D"]
 
 [node name="Asteroid Spawner" parent="." instance=ExtResource("1_0f027")]
+
+[node name="MatchManager" parent="." instance=ExtResource("2_2c62f")]

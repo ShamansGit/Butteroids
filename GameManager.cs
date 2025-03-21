@@ -8,6 +8,7 @@ public partial class GameManager : Node
     //todo: change to dictionary?
     public static Dictionary<int,PlayerInfo> Players = new Dictionary<int,PlayerInfo>();
     public static int PlayerCount = 0;
+    public static int UniquePlayerInstances = 0;
     public static void AddPlayer(int id,PlayerInfo info){
         Players.Add(id,info);
 		PlayerCount += 1;
@@ -15,5 +16,8 @@ public partial class GameManager : Node
     public static void RemovePlayer(int id){
         Players.Remove(id);
 		PlayerCount -= 1;
+    }
+    public static Color GeneratePlayerColor(int playerNumber){
+        return Color.FromHsv(0.2f * playerNumber,1f,1f);
     }
 }
