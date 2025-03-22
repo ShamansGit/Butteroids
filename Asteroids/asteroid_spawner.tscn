@@ -1,10 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://0vpq4r6i1ffa"]
+[gd_scene load_steps=2 format=3 uid="uid://0vpq4r6i1ffa"]
 
 [ext_resource type="Script" uid="uid://betc6uafwbrns" path="res://Asteroids/AsteroidSpawner.cs" id="1_eiik5"]
-[ext_resource type="PackedScene" uid="uid://ckkjppnwty22" path="res://Asteroids/asteroid_large.tscn" id="2_e6spt"]
 
-[node name="Asteroid Spawner" type="Node"]
+[node name="Asteroid Spawner" type="Node2D"]
 script = ExtResource("1_eiik5")
 spawnFrequency = 1.0
-asteroids = Array[PackedScene]([ExtResource("2_e6spt")])
 asteroidsChance = PackedFloat32Array(1)

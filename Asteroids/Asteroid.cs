@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 public partial class Asteroid : Area2D
 {
-    [Export] PackedScene pieceScene; // Array of RigidBody2D parts the asteroid can break into.
+    [Export(PropertyHint.Dir)] string pieceScene; // Array of RigidBody2D parts the asteroid can break into.
     [Export] int chunkCount = 3;
     [Export] float speed = 10;
     Vector2 bounds;
@@ -13,19 +13,21 @@ public partial class Asteroid : Area2D
     [Export] CollisionShape2D collisionShape;
     [Export] Sprite2D sprite;
     [Export] Godot.Collections.Array<Texture2D> asteroidTextures = new Godot.Collections.Array<Texture2D>();
+    [Export] MultiplayerSynchronizer synchronizer;
     public static int asteroidCount = 0;
+    bool hasAuthority;
 
     // Called when the node enters the scene
     public override void _Ready()
     {
         // Initialise with random speed, direction, and spin
 
-        Vector2 direction = RandomDirection();
-        velocity = direction * speed;
+        //Vector2 direction = RandomDirection();
+        //velocity = direction * speed;
 
         // Set up edge for wraparound
         bounds = GetNode<Globals>("/root/Globals").mapSize;
-        margin = bounds * 0.1f;
+        margin = bounds * 0.2f;
 
 
         sprite.Texture = asteroidTextures.PickRandom();
@@ -33,6 +35,11 @@ public partial class Asteroid : Area2D
         AreaEntered += CollideEnter;
 
         asteroidCount += 1;
+
+        //sets the synchronisers authority to 1
+        //synchronizer = (MultiplayerSynchronizer)FindChild("MultiplayerSynchronizer");
+        //synchronizer.SetMultiplayerAuthority(1);
+        hasAuthority = Multiplayer.GetUniqueId() == 1;
 
         //Simplified the collision shapes and reduced number of sprites for performance
 
@@ -57,14 +64,16 @@ public partial class Asteroid : Area2D
         // GetNode("Area2D").AddChild(hitbox);
         hasSpawnImmunity = true;
     }
-
-    private Vector2 RandomDirection() => new Vector2((float)GD.RandRange(-1.0,1.0),(float)GD.RandRange(-1.0,1.0)).Normalized();
+    public void SetDirection(Vector2 direction){
+        velocity = direction.Normalized() * speed;
+    }
     // Called every frame
 
     public bool hasSpawnImmunity = true;
     float graceTime = 0;
     public override void _PhysicsProcess(double delta)
     {
+        //if (!hasAuthority) return;
         // Hopefully more efficient than 'if' statements to check if out of bounds
 
         Position += velocity * (float)delta;
@@ -86,33 +95,35 @@ public partial class Asteroid : Area2D
     /// <param name="node">The other colliding body</param>
     /// 
     public void CollideEnter(Node node){
-        if (node is Player){
+        //if (!hasAuthority) return;
+        if (hasAuthority && node is Player){
             GD.Print("PLAYER HIT");
             ((Player)node).Hit(); 
         }
         //GD.Print("HELLO");
         if (!hasSpawnImmunity || !(node is Asteroid)){
             CallDeferred(nameof(Split));
+            asteroidCount -= 1;
+            QueueFree();
         }
     }
     public void Split(){
+        if (!hasAuthority) return;
         //GD.Print("TRUE" + pieceScene);
         // Add all the pieces to the scene tree
         if (pieceScene != null){
             Node root = GetParent();
-            GD.Print("SPLITS");
             for (int i = 0; i < chunkCount; i++)
             {
-                Asteroid piece = pieceScene.Instantiate<Asteroid>();
+                AsteroidSpawner.instance.Rpc(nameof(AsteroidSpawner.instance.SpawnAsteroid),pieceScene,GlobalPosition,AsteroidSpawner.RandomDirection());
+                //Asteroid piece = pieceScene.Instantiate<Asteroid>();
                 //piece.rng = rng;
-                piece.hasSpawnImmunity = true;
-                piece.GlobalPosition = GlobalPosition;
-                root.AddChild(piece);
+                //piece.hasSpawnImmunity = true;
+                //piece.GlobalPosition = GlobalPosition;
+                //root.AddChild(piece);
                 //CallDeferred(nameof(AddChildDeferred), root, piece);
             }
         }
-        asteroidCount -= 1;
-        QueueFree();
     }
 
     // Got an error when adding a child from OnBodyEntered, calling it deferred here fixes it.

@@ -1,17 +1,62 @@
-[gd_scene load_steps=5 format=3 uid="uid://6nvwgy4x3u14"]
+[gd_scene load_steps=4 format=3 uid="uid://6nvwgy4x3u14"]
 
 [ext_resource type="PackedScene" uid="uid://0vpq4r6i1ffa" path="res://Asteroids/asteroid_spawner.tscn" id="1_0f027"]
 [ext_resource type="PackedScene" uid="uid://coa6yw103pv6x" path="res://Networking/match_manager.tscn" id="2_2c62f"]
-[ext_resource type="PackedScene" uid="uid://ckkjppnwty22" path="res://Asteroids/asteroid_large.tscn" id="2_d5x1h"]
-[ext_resource type="PackedScene" uid="uid://daxr452qhl6d6" path="res://Asteroids/asteroid_medium.tscn" id="3_8mm7a"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_d5x1h"]
 
 [node name="MainScene" type="Node2D"]
 
 [node name="Asteroid Spawner" parent="." instance=ExtResource("1_0f027")]
-asteroids = Array[PackedScene]([ExtResource("2_d5x1h"), ExtResource("3_8mm7a")])
+asteroids = PackedStringArray("res://Asteroids/asteroid_large.tscn", "res://Asteroids/asteroid_medium.tscn")
 asteroidsChance = PackedFloat32Array(0.5, 1)
+maxAsteroids = 50
+
+[node name="Node2D" type="Node2D" parent="Asteroid Spawner"]
+scale = Vector2(0.8, 0.8)
+
+[node name="World Bounds" type="StaticBody2D" parent="Asteroid Spawner/Node2D"]
+position = Vector2(1000.27, 2000)
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Asteroid Spawner/Node2D/World Bounds"]
+shape = SubResource("WorldBoundaryShape2D_d5x1h")
+
+[node name="Line2D" type="Line2D" parent="Asteroid Spawner/Node2D/World Bounds"]
+points = PackedVector2Array(-1000, 0, 1000, 0)
+
+[node name="World Bounds2" type="StaticBody2D" parent="Asteroid Spawner/Node2D"]
+position = Vector2(1000.27, 0)
+rotation = -3.14159
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Asteroid Spawner/Node2D/World Bounds2"]
+shape = SubResource("WorldBoundaryShape2D_d5x1h")
+
+[node name="Line2D" type="Line2D" parent="Asteroid Spawner/Node2D/World Bounds2"]
+points = PackedVector2Array(-1000, 0, 1000, 0)
+
+[node name="World Bounds3" type="StaticBody2D" parent="Asteroid Spawner/Node2D"]
+position = Vector2(2000, 1000)
+rotation = -1.57079
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Asteroid Spawner/Node2D/World Bounds3"]
+shape = SubResource("WorldBoundaryShape2D_d5x1h")
+
+[node name="Line2D" type="Line2D" parent="Asteroid Spawner/Node2D/World Bounds3"]
+points = PackedVector2Array(-1000, 0, 1000, 0)
+
+[node name="World Bounds4" type="StaticBody2D" parent="Asteroid Spawner/Node2D"]
+position = Vector2(0, 1000.27)
+rotation = 1.5708
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Asteroid Spawner/Node2D/World Bounds4"]
+shape = SubResource("WorldBoundaryShape2D_d5x1h")
+
+[node name="Line2D" type="Line2D" parent="Asteroid Spawner/Node2D/World Bounds4"]
+points = PackedVector2Array(-1000, 0, 1000, 0)
 
 [node name="MatchManager" parent="." instance=ExtResource("2_2c62f")]
-
-[node name="AsteroidLarge" parent="." instance=ExtResource("2_d5x1h")]
-position = Vector2(227, -17)
+position = Vector2(800, 800)
