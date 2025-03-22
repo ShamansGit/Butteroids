@@ -11,6 +11,7 @@ public partial class AsteroidSpawner : Node
     [Export]
     float[] asteroidsChance;
     [Export] int maxAsteroids = 30;
+    [Export] bool enabled = true;
 
     private float timePasssedSinceSpawn = 0f;
     private float totalChance = 0f;
@@ -21,7 +22,7 @@ public partial class AsteroidSpawner : Node
     public override void _Process(double delta)
     {
         //puts a cap on how many asteroids can spawn
-        if (Asteroid.asteroidCount > maxAsteroids) return;
+        if (Asteroid.asteroidCount > maxAsteroids || !enabled) return;
 
         timePasssedSinceSpawn += (float)delta;
         if ((int)(timePasssedSinceSpawn / spawnFrequency) > 0)

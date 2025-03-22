@@ -29,8 +29,8 @@ public partial class Asteroid : Area2D
 
 
         sprite.Texture = asteroidTextures.PickRandom();
-        BodyEntered += Collide;
-        AreaEntered += Collide;
+        BodyEntered += CollideEnter;
+        AreaEntered += CollideEnter;
 
         asteroidCount += 1;
 
@@ -83,28 +83,31 @@ public partial class Asteroid : Area2D
     /// <summary>
     /// Called whenever a body enters this one. Scene layers are set up such that this object can only collide with projectiles and asteroid pieces.
     /// </summary>
-    /// <param name="body">The other colliding body</param>
+    /// <param name="node">The other colliding body</param>
     /// 
-    public void Collide(Node body){
-        if (body is Player){
+    public void CollideEnter(Node node){
+        if (node is Player){
             GD.Print("PLAYER HIT");
-            ((Player)body).Hit(); 
+            ((Player)node).Hit(); 
         }
-        if (!hasSpawnImmunity || body is not Asteroid){
+        //GD.Print("HELLO");
+        if (!hasSpawnImmunity || !(node is Asteroid)){
             CallDeferred(nameof(Split));
         }
     }
     public void Split(){
+        //GD.Print("TRUE" + pieceScene);
         // Add all the pieces to the scene tree
         if (pieceScene != null){
-            Node root = GetTree().CurrentScene;
+            Node root = GetParent();
+            GD.Print("SPLITS");
             for (int i = 0; i < chunkCount; i++)
             {
                 Asteroid piece = pieceScene.Instantiate<Asteroid>();
                 //piece.rng = rng;
                 piece.hasSpawnImmunity = true;
+                piece.GlobalPosition = GlobalPosition;
                 root.AddChild(piece);
-                piece.Position = Position;
                 //CallDeferred(nameof(AddChildDeferred), root, piece);
             }
         }

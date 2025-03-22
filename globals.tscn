@@ -4,4 +4,4 @@
 
 [node name="Globals" type="Node"]
 script = ExtResource("1_f6yec")
-mapSize = Vector2(2000, 2000)
+mapSize = Vector2(500, 500)
