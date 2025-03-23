@@ -78,12 +78,18 @@ public partial class Asteroid : Area2D
             ((Player)node).Hit(); 
         }
         if (!hasSpawnImmunity || !(node is Asteroid)){
-            CallDeferred(nameof(Split));
+            if (node is Asteroid)
+            {
+                CallDeferred(nameof(Split), node as Asteroid);
+            } else
+            {
+                CallDeferred(nameof(Split), null);
+            }
             asteroidCount -= 1;
             QueueFree();
         }
     }
-    public void Split()
+    public void Split(Asteroid other)
     {
         if (!hasAuthority) return;
         // Add all the pieces to the scene tree
@@ -91,7 +97,18 @@ public partial class Asteroid : Area2D
             Node root = GetParent();
             for (int i = 0; i < chunkCount; i++)
             {
-                AsteroidSpawner.instance.Rpc(nameof(AsteroidSpawner.instance.SpawnAsteroid),pieceScene,GlobalPosition,AsteroidSpawner.RandomDirection(), AsteroidSpawner.RandomRotationSpeed());
+                float randOffsetSize = (collisionShape.Shape as CircleShape2D).Radius;
+                Vector2 randomOffset = new ((float)GD.RandRange(-randOffsetSize, randOffsetSize), (float)GD.RandRange(-randOffsetSize, randOffsetSize));
+                if (other is null)
+                {
+                    AsteroidSpawner.instance.Rpc(nameof(AsteroidSpawner.instance.SpawnAsteroid), pieceScene, GlobalPosition + randomOffset, velocity, rotationSpeed);
+                } 
+                else
+                {
+                    float centreDist = randomOffset.Length();
+                    Vector2 linearVel = velocity + new Vector2(rotationSpeed, rotationSpeed) * centreDist;
+                    AsteroidSpawner.instance.Rpc(nameof(AsteroidSpawner.instance.SpawnAsteroid), pieceScene, GlobalPosition, linearVel + other.velocity, rotationSpeed + other.rotationSpeed);
+                }
             }
         }
     }
