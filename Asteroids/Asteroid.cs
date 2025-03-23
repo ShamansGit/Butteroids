@@ -10,12 +10,15 @@ public partial class Asteroid : Area2D
     Vector2 bounds;
     Vector2 margin;
     Vector2 velocity;
+    float rotationSpeed;
     [Export] CollisionShape2D collisionShape;
     [Export] Sprite2D sprite;
     [Export] Godot.Collections.Array<Texture2D> asteroidTextures = new Godot.Collections.Array<Texture2D>();
     [Export] MultiplayerSynchronizer synchronizer;
     public static int asteroidCount = 0;
     bool hasAuthority;
+    public bool hasSpawnImmunity = true;
+    float graceTime = 0;
 
     // Called when the node enters the scene
     public override void _Ready()
@@ -36,15 +39,20 @@ public partial class Asteroid : Area2D
 
         hasSpawnImmunity = true;
     }
-    public void SetDirection(Vector2 direction){
+    public void SetDirection(Vector2 direction)
+    {
         velocity = direction.Normalized() * speed;
     }
 
-    public bool hasSpawnImmunity = true;
-    float graceTime = 0;
+    public void SetRotationSpeed(float speed)
+    {
+        rotationSpeed = speed;
+    }
+
     public override void _PhysicsProcess(double delta)
     {
         Position += velocity * (float)delta;
+        sprite.Rotate(rotationSpeed * (float)delta);
 
         // Hopefully more efficient than 'if' statements to check if out of bounds
         // Effectively, p is wrapped around iff p >= bounds + margin OR p < -margin
@@ -63,7 +71,8 @@ public partial class Asteroid : Area2D
     /// </summary>
     /// <param name="node">The other colliding body</param>
     /// 
-    public void CollideEnter(Node node){
+    public void CollideEnter(Node node)
+    {
         if (hasAuthority && node is Player){
             GD.Print("PLAYER HIT");
             ((Player)node).Hit(); 
@@ -74,14 +83,15 @@ public partial class Asteroid : Area2D
             QueueFree();
         }
     }
-    public void Split(){
+    public void Split()
+    {
         if (!hasAuthority) return;
         // Add all the pieces to the scene tree
         if (pieceScene != null){
             Node root = GetParent();
             for (int i = 0; i < chunkCount; i++)
             {
-                AsteroidSpawner.instance.Rpc(nameof(AsteroidSpawner.instance.SpawnAsteroid),pieceScene,GlobalPosition,AsteroidSpawner.RandomDirection());
+                AsteroidSpawner.instance.Rpc(nameof(AsteroidSpawner.instance.SpawnAsteroid),pieceScene,GlobalPosition,AsteroidSpawner.RandomDirection(), AsteroidSpawner.RandomRotationSpeed());
             }
         }
     }

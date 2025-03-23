@@ -13,7 +13,8 @@ public partial class AsteroidSpawner : Node
     float[] asteroidsChance;
     [Export] int maxAsteroids = 30;
     [Export] bool enabled = true;
-
+    
+    private static float maxRotationSpeed = 1f;
     private float timePasssedSinceSpawn = 0f;
     private float totalChance = 0f;
     private Vector2 mapSize;
@@ -65,16 +66,19 @@ public partial class AsteroidSpawner : Node
         Vector2 borderPosition = new Vector2(random < 2 * mapSize.X ? random % mapSize.X : ((int)(random - mapSize.X * 2) / (int)mapSize.Y) * mapSize.X,
                                         random < 2 * mapSize.X ? ((int)random / (int)mapSize.X) * mapSize.Y : (random - 2 * mapSize.X) % mapSize.Y);
 
-        Rpc(nameof(SpawnAsteroid),asteroids[index],borderPosition,RandomDirection());
+        Rpc(nameof(SpawnAsteroid),asteroids[index],borderPosition,RandomDirection(), RandomRotationSpeed());
     }
     [Rpc(MultiplayerApi.RpcMode.AnyPeer,CallLocal = true,TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void SpawnAsteroid(string scenePath,Vector2 position, Vector2 direction){
+    public void SpawnAsteroid(string scenePath,Vector2 position, Vector2 direction, float rotSpeed){
         PackedScene scene = GD.Load<PackedScene>(scenePath);
         Asteroid asteroid = scene.Instantiate<Asteroid>();
         instance.AddChild(asteroid);
         asteroid.Position = position;
         asteroid.SetDirection(direction);
+        asteroid.SetRotationSpeed(rotSpeed);
     }
     public static Vector2 RandomDirection() => new Vector2((float)GD.RandRange(-1.0,1.0),(float)GD.RandRange(-1.0,1.0)).Normalized();
+
+    public static float RandomRotationSpeed() => (float)GD.RandRange(-maxRotationSpeed, maxRotationSpeed);
 
 }
