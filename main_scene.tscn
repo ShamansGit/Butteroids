@@ -12,57 +12,66 @@ offset_left = -875.0
 offset_top = -579.0
 offset_right = 2489.0
 offset_bottom = 2065.0
-color = Color(0, 0, 0, 1)
+color = Color(0.00620196, 0.014096, 0.0377485, 1)
 
 [node name="Asteroid Spawner" parent="." instance=ExtResource("1_0f027")]
+spawnFrequency = 2.0
 asteroids = PackedStringArray("res://Asteroids/asteroid_large.tscn", "res://Asteroids/asteroid_medium.tscn")
 asteroidsChance = PackedFloat32Array(0.5, 1)
 maxAsteroids = 50
 
-[node name="Node2D" type="Node2D" parent="Asteroid Spawner"]
+[node name="World Bounds" type="Node2D" parent="."]
 scale = Vector2(0.8, 0.8)
 
-[node name="World Bounds" type="StaticBody2D" parent="Asteroid Spawner/Node2D"]
+[node name="World Bounds Darkness" type="Polygon2D" parent="World Bounds"]
+position = Vector2(1000.27, 2000)
+scale = Vector2(1, 1)
+color = Color(0.000676107, 0.00147477, 0.00760812, 1)
+invert_enabled = true
+invert_border = 2381.3
+polygon = PackedVector2Array(999.73, -2.49976, 1003.48, -2003.75, -1001.52, -1998.75, -1001.52, 2.50024)
+
+[node name="World Bounds" type="StaticBody2D" parent="World Bounds"]
 position = Vector2(1000.27, 2000)
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Asteroid Spawner/Node2D/World Bounds"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World Bounds/World Bounds"]
 shape = SubResource("WorldBoundaryShape2D_d5x1h")
 
-[node name="Line2D" type="Line2D" parent="Asteroid Spawner/Node2D/World Bounds"]
+[node name="Line2D" type="Line2D" parent="World Bounds/World Bounds"]
 points = PackedVector2Array(-1000, 0, 1000, 0)
 
-[node name="World Bounds2" type="StaticBody2D" parent="Asteroid Spawner/Node2D"]
+[node name="World Bounds2" type="StaticBody2D" parent="World Bounds"]
 position = Vector2(1000.27, 0)
 rotation = -3.14159
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Asteroid Spawner/Node2D/World Bounds2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World Bounds/World Bounds2"]
 shape = SubResource("WorldBoundaryShape2D_d5x1h")
 
-[node name="Line2D" type="Line2D" parent="Asteroid Spawner/Node2D/World Bounds2"]
+[node name="Line2D" type="Line2D" parent="World Bounds/World Bounds2"]
 points = PackedVector2Array(-1000, 0, 1000, 0)
 
-[node name="World Bounds3" type="StaticBody2D" parent="Asteroid Spawner/Node2D"]
+[node name="World Bounds3" type="StaticBody2D" parent="World Bounds"]
 position = Vector2(2000, 1000)
 rotation = -1.57079
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Asteroid Spawner/Node2D/World Bounds3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World Bounds/World Bounds3"]
 shape = SubResource("WorldBoundaryShape2D_d5x1h")
 
-[node name="Line2D" type="Line2D" parent="Asteroid Spawner/Node2D/World Bounds3"]
+[node name="Line2D" type="Line2D" parent="World Bounds/World Bounds3"]
 points = PackedVector2Array(-1000, 0, 1000, 0)
 
-[node name="World Bounds4" type="StaticBody2D" parent="Asteroid Spawner/Node2D"]
+[node name="World Bounds4" type="StaticBody2D" parent="World Bounds"]
 position = Vector2(0, 1000.27)
 rotation = 1.5708
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Asteroid Spawner/Node2D/World Bounds4"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World Bounds/World Bounds4"]
 shape = SubResource("WorldBoundaryShape2D_d5x1h")
 
-[node name="Line2D" type="Line2D" parent="Asteroid Spawner/Node2D/World Bounds4"]
+[node name="Line2D" type="Line2D" parent="World Bounds/World Bounds4"]
 points = PackedVector2Array(-1000, 0, 1000, 0)
 
 [node name="MatchManager" parent="." instance=ExtResource("2_2c62f")]

@@ -13,45 +13,56 @@ public partial class Player : CharacterBody2D
 	//networking
 	[Export] MultiplayerSynchronizer synchronizer;
 	[Export] float invulnerableDuration = 4;
+	long playerId;
 	bool hasControl = false;
 	//start with 5 so that when players spawn in they have 5 seconds of spawn immunity
 	float invulnTimer = 0;
-	public bool isInvulnerable => invulnTimer > 0;
+	public bool isInvulnerable => invulnTimer > 0 && !isDead;
+	bool isDead = false;
 
 	public override void _Ready()
 	{
 		base._Ready();
 		invulnTimer = invulnerableDuration;
 	}
-	public void SetMultiplayer(int id, PlayerInfo info)
+	public void SetMultiplayer(long id, PlayerInfo info)
 	{
-		synchronizer.SetMultiplayerAuthority(id);
+		synchronizer.SetMultiplayerAuthority((int)id);
 		hasControl = synchronizer.IsMultiplayerAuthority();
 		Name = id.ToString();
+		playerId = id;
 		Modulate = info.color;
 
 		if (hasControl)
 		{
-			Camera2D camera = GetViewport().GetCamera2D();
-			camera.GetParent().RemoveChild(camera);
-			AddChild(camera);
-			camera.Position = Vector2.Zero;
+			SetCameraParent(this);
 		}
+	}
+	public void SetCameraParent(Node node)
+	{
+		Camera2D camera = GetViewport().GetCamera2D();
+		camera.GetParent().RemoveChild(camera);
+		node.AddChild(camera);
+		camera.Position = Vector2.Zero;
 	}
 	public override void _PhysicsProcess(double delta)
 	{
-		if (isInvulnerable){
+		if (isInvulnerable)
+		{
 			invulnTimer -= (float)delta;
 			//makes the player flash when invulnerable
-			Visible = invulnTimer % 0.2f > 0.1f;  
-		}else{
-			Visible = true;
+			Visible = invulnTimer % 0.2f > 0.1f;
+		}
+		else
+		{
+			Visible = !isDead;
 		}
 
 		//stops you controlling other players
 		if (hasControl) Control(delta);
 	}
-	public void Control(double delta){
+	public void Control(double delta)
+	{
 		float rotationInput = Input.GetActionStrength("rotate_right") - Input.GetActionStrength("rotate_left");
 		float thrustInput = Input.GetActionStrength("accelerate");
 
@@ -84,15 +95,35 @@ public partial class Player : CharacterBody2D
 		MoveAndSlide();
 	}
 
-    public void Hit()
-    {
-		if (!isInvulnerable){
-			invulnTimer = invulnerableDuration;
+	public void Hit()
+	{
+		//if this is the server / host
+		if (Multiplayer.GetUniqueId() == 1)
+		{
+			if (!isInvulnerable) Rpc(nameof(Player.OnPlayerHit), playerId);
 		}
-		// if (hasControl){
-		// 	//hasControl = false;
-		// 	//Hide();
-		// }
-    }
+	}
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void OnPlayerHit(long hitId)
+	{
+		invulnTimer = invulnerableDuration;
+		GameManager.Players[hitId].lives -= 1;
+		if (hitId == playerId)
+		{
+			GetNode<UsernameLabel>("Username").UpdateInfo();
+			if (GameManager.Players[hitId].lives < 0)
+			{
+				MatchManager.EliminatePlayer(hitId);
+				if (hitId == Multiplayer.GetUniqueId())
+				{
+					GD.Print("You Died");
+					hasControl = false;
+					SetCameraParent(GetParent());
+				}
+				invulnTimer = 0;
+				isDead = true;
+			}
+		}
+	}
 
 }

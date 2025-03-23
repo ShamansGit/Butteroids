@@ -73,9 +73,9 @@ public partial class Asteroid : Area2D
     /// 
     public void CollideEnter(Node node)
     {
-        if (hasAuthority && node is Player && !((Player)node).isInvulnerable){
-            GD.Print("PLAYER HIT");
-            ((Player)node).Hit(); 
+        //!bug: The player hitting things has inconsistent behaviour and leads to desync
+        if (node is Player){
+            if (!((Player)node).isInvulnerable) ((Player)node).Hit(); 
         }
         else if (!hasSpawnImmunity || !(node is Asteroid)){
             if (node is Asteroid)
@@ -92,6 +92,10 @@ public partial class Asteroid : Area2D
             QueueFree();
         }
     }
+    /// <summary>
+    /// Splits the node into multiple peices and sends this data to everyone on the network.
+    /// </summary>
+    /// <param name="hitAsteroid">If the asteroid hit another asteroid, hitAsteroid allows you to inherit its properties.</param>
     public void Split(Asteroid hitAsteroid = null)
     {
         if (!hasAuthority) return;

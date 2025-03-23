@@ -24,6 +24,10 @@ Globals="*res://globals.tscn"
 
 project/assembly_name="Butteroids"
 
+[global_group]
+
+Player="All players are in this group."
+
 [input]
 
 rotate_right={

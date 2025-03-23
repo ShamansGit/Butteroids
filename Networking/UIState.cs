@@ -4,4 +4,5 @@ public enum UIState
     JoiningAsClient,
     ConnectedAsHost,
     ConnectedAsClient,
+    InGame,
 }

@@ -48,9 +48,13 @@ public partial class MultiplayerController : Control
 
     private void OnDisconnectButtonPressed()
     {
-		//todo: make sure this updates gameManager player list
         peer.Close();
 		UpdateUiState(UIState.NotConnected);
+
+		GameManager.EndGame();
+		GameManager.Players.Clear();
+		GameManager.PlayerCount = 0;
+		GameManager.UniquePlayerInstances = 0;
 		PrintStatus("You disconnected from the server!","purple");
     }
 
@@ -94,6 +98,7 @@ public partial class MultiplayerController : Control
     private void PeerDisconnected(long id)
     {
         PrintStatus("Player Disconnected: " + id.ToString(),"purple");
+		GameManager.RemovePlayer(id);
     }
 
 	/// <summary>
@@ -112,7 +117,7 @@ public partial class MultiplayerController : Control
 		}
 	}
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-	private void SendPlayerInformation(string name,int id,int playerInstanceNumber = -1){
+	private void SendPlayerInformation(string name,long id,int playerInstanceNumber = -1){
 		PlayerInfo playerInfo = new PlayerInfo(){
 			Name = name,
 			//if playerInstanceNumber == -1, then use UniquePlayerInstances as number instead
@@ -125,7 +130,7 @@ public partial class MultiplayerController : Control
 		}
 
 		if (Multiplayer.IsServer()){
-			foreach (int idKey in GameManager.Players.Keys)
+			foreach (long idKey in GameManager.Players.Keys)
 			{
 				Rpc(nameof(SendPlayerInformation),GameManager.Players[idKey].Name,idKey,GameManager.UniquePlayerInstances - 1);
 				GameManager.UniquePlayerInstances += 1;
@@ -167,12 +172,8 @@ public partial class MultiplayerController : Control
 	}
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer,CallLocal = true,TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	private void StartGame(){
-		foreach (var player in GameManager.Players.Values)
-		{
-			GD.Print(player.Name + " is playing!");
-		}
-		var scene = ResourceLoader.Load<PackedScene>("res://main_scene.tscn").Instantiate();
-		GetTree().Root.AddChild(scene);
+		GameManager.StartGame();
+		UpdateUiState(UIState.InGame);
 		Hide();
 	}
 	public void PrintStatus(string newStatus,string color = "white"){
@@ -192,7 +193,7 @@ public partial class MultiplayerController : Control
 
 		hostButton.Disabled = UiState != UIState.NotConnected;
 		joinButton.Disabled = UiState != UIState.NotConnected;
-		startButton.Disabled = UiState != UIState.ConnectedAsHost;
+		startButton.Disabled = UiState != UIState.ConnectedAsHost || UiState == UIState.InGame;
 		disconnectButton.Disabled = UiState == UIState.NotConnected;
 
 		nameEdit.Editable = UiState == UIState.NotConnected;

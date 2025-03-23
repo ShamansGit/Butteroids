@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://h5wsyc556w1u"]
+[gd_scene load_steps=6 format=3 uid="uid://h5wsyc556w1u"]
 
 [ext_resource type="Script" uid="uid://c7qf5pjjk7hwt" path="res://Player/Player.cs" id="1_br6tf"]
 [ext_resource type="Texture2D" uid="uid://cu5ha7i31mmd6" path="res://Player/assets/sprites/Player.png" id="2_v1os7"]
+[ext_resource type="Script" uid="uid://by3yoblmqwlxc" path="res://Player/UsernameLabel.cs" id="3_btcbx"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4ntmi"]
 properties/0/path = NodePath(".:position")
@@ -14,7 +15,7 @@ properties/1/replication_mode = 1
 [sub_resource type="CircleShape2D" id="CircleShape2D_4ntmi"]
 radius = 18.0278
 
-[node name="player" type="CharacterBody2D" node_paths=PackedStringArray("synchronizer")]
+[node name="player" type="CharacterBody2D" node_paths=PackedStringArray("synchronizer") groups=["Player"]]
 collision_layer = 2
 collision_mask = 5
 motion_mode = 1
@@ -31,3 +32,23 @@ replication_config = SubResource("SceneReplicationConfig_4ntmi")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_4ntmi")
+
+[node name="Username" type="Node2D" parent="."]
+script = ExtResource("3_btcbx")
+
+[node name="Label" type="Label" parent="Username"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.0
+offset_top = 48.0
+offset_right = 22.0
+offset_bottom = 97.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "name
+🤍🤍🤍"
+horizontal_alignment = 1
+vertical_alignment = 1
