@@ -12,11 +12,16 @@ public partial class Player : CharacterBody2D
 
 	//networking
 	[Export] MultiplayerSynchronizer synchronizer;
+	[Export] float invulnerableDuration = 4;
 	bool hasControl = false;
+	//start with 5 so that when players spawn in they have 5 seconds of spawn immunity
+	float invulnTimer = 0;
+	public bool isInvulnerable => invulnTimer > 0;
 
 	public override void _Ready()
 	{
 		base._Ready();
+		invulnTimer = invulnerableDuration;
 	}
 	public void SetMultiplayer(int id, PlayerInfo info)
 	{
@@ -35,9 +40,18 @@ public partial class Player : CharacterBody2D
 	}
 	public override void _PhysicsProcess(double delta)
 	{
-		//stops you controlling other players
-		if (!hasControl) return;
+		if (isInvulnerable){
+			invulnTimer -= (float)delta;
+			//makes the player flash when invulnerable
+			Visible = invulnTimer % 0.2f > 0.1f;  
+		}else{
+			Visible = true;
+		}
 
+		//stops you controlling other players
+		if (hasControl) Control(delta);
+	}
+	public void Control(double delta){
 		float rotationInput = Input.GetActionStrength("rotate_right") - Input.GetActionStrength("rotate_left");
 		float thrustInput = Input.GetActionStrength("accelerate");
 
@@ -72,10 +86,13 @@ public partial class Player : CharacterBody2D
 
     public void Hit()
     {
-		if (hasControl){
-			//hasControl = false;
-			//Hide();
+		if (!isInvulnerable){
+			invulnTimer = invulnerableDuration;
 		}
+		// if (hasControl){
+		// 	//hasControl = false;
+		// 	//Hide();
+		// }
     }
 
 }

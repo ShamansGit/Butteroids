@@ -9,6 +9,12 @@ public partial class GameManager : Node
     public static Dictionary<int,PlayerInfo> Players = new Dictionary<int,PlayerInfo>();
     public static int PlayerCount = 0;
     public static int UniquePlayerInstances = 0;
+    [Export] public Vector2 mapSize = new Vector2(1600,1600);
+    public Vector2 mapCentre => mapSize / 2f;
+    public override void _Ready()
+    {
+        instance = this;
+    }
     public static void AddPlayer(int id,PlayerInfo info){
         Players.Add(id,info);
 		PlayerCount += 1;

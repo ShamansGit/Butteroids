@@ -107,6 +107,9 @@ public partial class MultiplayerController : Control
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		if (Input.IsActionJustPressed("toggle_menu")){
+			Visible = !Visible;
+		}
 	}
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	private void SendPlayerInformation(string name,int id,int playerInstanceNumber = -1){

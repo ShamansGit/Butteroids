@@ -4,6 +4,6 @@ using System;
 //Obsolete, use GameManager for global variables
 public partial class Globals : Node
 {
-    [Export]
-    public Vector2 mapSize;
+    //[Export]
+    //public Vector2 mapSize;
 }

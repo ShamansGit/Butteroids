@@ -24,7 +24,7 @@ public partial class Asteroid : Area2D
     public override void _Ready()
     {
         // Set up edge for wraparound
-        bounds = GetNode<Globals>("/root/Globals").mapSize;
+        bounds = GameManager.instance.mapSize;
         margin = bounds * 0.2f;
 
 
@@ -73,23 +73,26 @@ public partial class Asteroid : Area2D
     /// 
     public void CollideEnter(Node node)
     {
-        if (hasAuthority && node is Player){
+        if (hasAuthority && node is Player && !((Player)node).isInvulnerable){
             GD.Print("PLAYER HIT");
             ((Player)node).Hit(); 
         }
-        if (!hasSpawnImmunity || !(node is Asteroid)){
+        else if (!hasSpawnImmunity || !(node is Asteroid)){
             if (node is Asteroid)
             {
                 CallDeferred(nameof(Split), node as Asteroid);
             } else
             {
-                CallDeferred(nameof(Split), null);
+                //passing in an empty Variant() instance is saying the hitAsteroid should == null. 
+                //You cannot pass in 'null' directly as it will be interpereted as calling a function that has no parameters
+                //(which doesnt exist). This is a weird godot thing...
+                CallDeferred(nameof(Split), new Variant());
             }
             asteroidCount -= 1;
             QueueFree();
         }
     }
-    public void Split(Asteroid other)
+    public void Split(Asteroid hitAsteroid = null)
     {
         if (!hasAuthority) return;
         // Add all the pieces to the scene tree
@@ -98,16 +101,22 @@ public partial class Asteroid : Area2D
             for (int i = 0; i < chunkCount; i++)
             {
                 float randOffsetSize = (collisionShape.Shape as CircleShape2D).Radius;
-                Vector2 randomOffset = new ((float)GD.RandRange(-randOffsetSize, randOffsetSize), (float)GD.RandRange(-randOffsetSize, randOffsetSize));
-                if (other is null)
+                float spreadAngle = (float)i / (chunkCount - 1) * Mathf.Pi;
+                Vector2 spreadDirection = new Vector2(Mathf.Sin(spreadAngle),Mathf.Cos(spreadAngle));
+                Vector2 spreadOffset = (spreadDirection * randOffsetSize).Normalized();
+                if (hitAsteroid is null)
                 {
-                    AsteroidSpawner.instance.Rpc(nameof(AsteroidSpawner.instance.SpawnAsteroid), pieceScene, GlobalPosition + randomOffset, velocity, rotationSpeed);
+                    Vector2 newVelocity = (speed * spreadDirection + velocity) / 2f;
+                    AsteroidSpawner.instance.Rpc(nameof(AsteroidSpawner.instance.SpawnAsteroid), pieceScene, GlobalPosition + spreadOffset, newVelocity, rotationSpeed);
                 } 
                 else
                 {
-                    float centreDist = randomOffset.Length();
-                    Vector2 linearVel = velocity + new Vector2(rotationSpeed, rotationSpeed) * centreDist;
-                    AsteroidSpawner.instance.Rpc(nameof(AsteroidSpawner.instance.SpawnAsteroid), pieceScene, GlobalPosition, linearVel + other.velocity, rotationSpeed + other.rotationSpeed);
+                    //Calculates a new average velocity by combining:
+                    //  -The vector of asteroid chunks spreading completely evenly
+                    //  -The asteroids current velocity
+                    //  -The velocity of the asteroid that was hit
+                    Vector2 newVelocity = (speed * spreadDirection + velocity + hitAsteroid.velocity) / 3f;
+                    AsteroidSpawner.instance.Rpc(nameof(AsteroidSpawner.instance.SpawnAsteroid), pieceScene, GlobalPosition + spreadOffset, newVelocity , rotationSpeed + hitAsteroid.rotationSpeed);
                 }
             }
         }
