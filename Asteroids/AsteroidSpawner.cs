@@ -60,13 +60,7 @@ public partial class AsteroidSpawner : Node
             index++;
             selected -= asteroidsChance[index];
         }
-        //Asteroid asteroid = asteroids[index].Instantiate<Asteroid>();
-        // Share rng
-        //asteroid.rng = rng;
-        //AddChild(asteroid);
         float random = rng.RandfRange(0, mapPerimeter);
-        //makes it so asteroids spawn as ring around centre
-        //Vector2 offset = mapSize / 2;
         // Randomly place somewhere on the perimeter
         Vector2 borderPosition = new Vector2(random < 2 * mapSize.X ? random % mapSize.X : ((int)(random - mapSize.X * 2) / (int)mapSize.Y) * mapSize.X,
                                         random < 2 * mapSize.X ? ((int)random / (int)mapSize.X) * mapSize.Y : (random - 2 * mapSize.X) % mapSize.Y);
@@ -75,7 +69,6 @@ public partial class AsteroidSpawner : Node
     }
     [Rpc(MultiplayerApi.RpcMode.AnyPeer,CallLocal = true,TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void SpawnAsteroid(string scenePath,Vector2 position, Vector2 direction){
-        //GD.Print("Asteroid Spawned");
         PackedScene scene = GD.Load<PackedScene>(scenePath);
         Asteroid asteroid = scene.Instantiate<Asteroid>();
         instance.AddChild(asteroid);
