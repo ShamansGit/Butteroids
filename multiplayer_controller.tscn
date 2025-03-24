@@ -1,6 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://brbnexytapf6k"]
+[gd_scene load_steps=7 format=3 uid="uid://brbnexytapf6k"]
 
 [ext_resource type="Script" uid="uid://c4tuu0k5fu36e" path="res://Networking/MultiplayerController.cs" id="1_7cmor"]
+[ext_resource type="FontFile" uid="uid://5ftmemoreou4" path="res://NAME SMILE.OTF" id="1_ewyxk"]
+[ext_resource type="FontFile" uid="uid://dnv2886crlrph" path="res://SUBOLEYA.TTF" id="2_7pdga"]
+
+[sub_resource type="Theme" id="Theme_c6pmj"]
+default_font = ExtResource("2_7pdga")
+default_font_size = 25
+RichTextLabel/fonts/bold_font = ExtResource("1_ewyxk")
+RichTextLabel/fonts/normal_font = ExtResource("2_7pdga")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k6la7"]
 bg_color = Color(0.152941, 0.054902, 0.0431373, 1)
@@ -17,6 +25,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_c6pmj")
 script = ExtResource("1_7cmor")
 hostButton = NodePath("ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Host")
 joinButton = NodePath("ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer/Join")
@@ -61,7 +70,7 @@ size_flags_horizontal = 3
 [node name="Game Name" type="RichTextLabel" parent="MultiplayerController/ControlPanel/HSplitContainer/LobbyPanel/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
-text = "[font_size=50]Butteroids[/font_size]
+text = "[font_size=50][b]Fragmenter[/b][/font_size]
 [color=cyan] -Made by Joe, Will and Wri-[/color]
 
 "
