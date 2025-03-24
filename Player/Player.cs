@@ -7,6 +7,7 @@ public partial class Player : CharacterBody2D
 	[Export] public float Acceleration { get; set; } = 600.0f;
 	[Export] public float RotationSpeed { get; set; } = 3.5f;
 	[Export] public float DampingFactor { get; set; } = 0.95f; // Slowdown when no input
+	[Export] TurretFire turret;
 
 	private Vector2 velocity = Vector2.Zero;
 
@@ -14,7 +15,7 @@ public partial class Player : CharacterBody2D
 	[Export] MultiplayerSynchronizer synchronizer;
 	[Export] float invulnerableDuration = 4;
 	long playerId;
-	bool hasControl = false;
+	public bool hasControl = false;
 	//start with 5 so that when players spawn in they have 5 seconds of spawn immunity
 	float invulnTimer = 0;
 	public bool isInvulnerable => invulnTimer > 0 && !isDead;
@@ -32,6 +33,8 @@ public partial class Player : CharacterBody2D
 		Name = id.ToString();
 		playerId = id;
 		Modulate = info.color;
+		turret.id = id;
+		turret.hasControl = hasControl;
 
 		if (hasControl)
 		{
@@ -93,6 +96,12 @@ public partial class Player : CharacterBody2D
 		// Move the player
 		Velocity = velocity;
 		//GD.Print($"Final Velocity: {Velocity}");
+
+		// If the player presses the "shoot" action
+		if (Input.IsActionJustPressed("shoot") && turret.canFire)
+		{
+			turret.Fire();
+		}
 
 		MoveAndSlide();
 	}

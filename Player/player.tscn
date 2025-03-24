@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c7qf5pjjk7hwt" path="res://Player/Player.cs" id="1_br6tf"]
 [ext_resource type="Texture2D" uid="uid://cu5ha7i31mmd6" path="res://Player/assets/sprites/Player.png" id="2_v1os7"]
 [ext_resource type="Script" uid="uid://by3yoblmqwlxc" path="res://Player/UsernameLabel.cs" id="3_btcbx"]
-[ext_resource type="Script" uid="uid://cpcshjstg2kpl" path="res://Player/turret_fire.cs" id="4_gwnis"]
+[ext_resource type="Script" uid="uid://cpcshjstg2kpl" path="res://Player/TurretFire.cs" id="4_gwnis"]
 [ext_resource type="PackedScene" uid="uid://lelc75o1vccy" path="res://Player/bullet.tscn" id="5_k53q1"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4ntmi"]
@@ -15,13 +15,14 @@ properties/1/spawn = true
 properties/1/replication_mode = 1
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4ntmi"]
-radius = 18.0278
+radius = 28.0
 
-[node name="player" type="CharacterBody2D" node_paths=PackedStringArray("synchronizer") groups=["Player"]]
+[node name="player" type="CharacterBody2D" node_paths=PackedStringArray("turret", "synchronizer") groups=["Player"]]
 collision_layer = 2
 collision_mask = 5
 motion_mode = 1
 script = ExtResource("1_br6tf")
+turret = NodePath("Turret")
 synchronizer = NodePath("MultiplayerSynchronizer")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -55,7 +56,13 @@ text = "name
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="turret" type="Node2D" parent="."]
-position = Vector2(1, -32)
+[node name="Turret" type="Node2D" parent="."]
+position = Vector2(1, -64)
 script = ExtResource("4_gwnis")
 bullet_scene = ExtResource("5_k53q1")
+fireDelay = 1.0
+
+[node name="Polygon2D" type="Polygon2D" parent="Turret"]
+position = Vector2(0, 44)
+scale = Vector2(0.604763, 0.604763)
+polygon = PackedVector2Array(-1, -1, 29, 66, 0, 49, -30, 66)

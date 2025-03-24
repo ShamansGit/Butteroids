@@ -87,6 +87,9 @@ public partial class Asteroid : Area2D
 				//You cannot pass in 'null' directly as it will be interpereted as calling a function that has no parameters
 				//(which doesnt exist). This is a weird godot thing...
 				CallDeferred(nameof(Split), new Variant());
+                if (node is Bullet){
+                    ((Bullet)node).Destroy();
+                }
 			}
 			asteroidCount -= 1;
 			QueueFree();
