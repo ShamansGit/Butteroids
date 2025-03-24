@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://h5wsyc556w1u"]
+[gd_scene load_steps=8 format=3 uid="uid://h5wsyc556w1u"]
 
 [ext_resource type="Script" uid="uid://c7qf5pjjk7hwt" path="res://Player/Player.cs" id="1_br6tf"]
 [ext_resource type="Texture2D" uid="uid://cu5ha7i31mmd6" path="res://Player/assets/sprites/Player.png" id="2_v1os7"]
 [ext_resource type="Script" uid="uid://by3yoblmqwlxc" path="res://Player/UsernameLabel.cs" id="3_btcbx"]
+[ext_resource type="Script" uid="uid://cpcshjstg2kpl" path="res://Player/turret_fire.cs" id="4_gwnis"]
+[ext_resource type="PackedScene" uid="uid://lelc75o1vccy" path="res://Player/bullet.tscn" id="5_k53q1"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4ntmi"]
 properties/0/path = NodePath(".:position")
@@ -52,3 +54,8 @@ text = "name
 🤍🤍🤍"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="turret" type="Node2D" parent="."]
+position = Vector2(1, -32)
+script = ExtResource("4_gwnis")
+bullet_scene = ExtResource("5_k53q1")

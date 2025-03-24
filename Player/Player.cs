@@ -102,7 +102,7 @@ public partial class Player : CharacterBody2D
 		//if this is the server / host
 		if (Multiplayer.GetUniqueId() == 1)
 		{
-			if (!isInvulnerable && !isDead) Rpc(nameof(Player.OnPlayerHit), playerId);
+			if (!isInvulnerable) Rpc(nameof(Player.OnPlayerHit), playerId);
 		}
 	}
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -118,11 +118,9 @@ public partial class Player : CharacterBody2D
 				MatchManager.EliminatePlayer(hitId);
 				if (hitId == Multiplayer.GetUniqueId())
 				{
-					GD.Print("You Died!");
+					GD.Print("You Died");
 					hasControl = false;
 					SetCameraParent(GetParent());
-					//zoom to see the whole map
-					GetViewport().GetCamera2D().Zoom = Vector2.One * GetViewportRect().Size.Y / GameManager.instance.mapSize.Y;
 				}
 				invulnTimer = 0;
 				isDead = true;
