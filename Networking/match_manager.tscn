@@ -8,5 +8,5 @@ script = ExtResource("1_d5qyo")
 playerScene = ExtResource("2_p6xok")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.615, 0.615)
+zoom = Vector2(0.923, 0.923)
 position_smoothing_enabled = true
