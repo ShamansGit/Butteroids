@@ -1,12 +1,53 @@
-[gd_scene load_steps=3 format=3 uid="uid://coa6yw103pv6x"]
+[gd_scene load_steps=5 format=3 uid="uid://coa6yw103pv6x"]
 
 [ext_resource type="Script" uid="uid://crvw60682olyg" path="res://Networking/MatchManager.cs" id="1_d5qyo"]
 [ext_resource type="PackedScene" uid="uid://h5wsyc556w1u" path="res://Player/player.tscn" id="2_p6xok"]
 
-[node name="MatchManager" type="Node2D"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d5qyo"]
+bg_color = Color(0.15044, 0.245804, 0.288042, 0.454902)
+border_width_top = 5
+border_width_bottom = 5
+border_blend = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_d5qyo"]
+font_size = 50
+
+[node name="MatchManager" type="Node2D" node_paths=PackedStringArray("banner")]
 script = ExtResource("1_d5qyo")
 playerScene = ExtResource("2_p6xok")
+banner = NodePath("CanvasLayer/Control/Panel/Banner")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.923, 0.923)
 position_smoothing_enabled = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -149.0
+offset_bottom = -70.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(0, 35.355)
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_d5qyo")
+
+[node name="Banner" type="Label" parent="CanvasLayer/Control/Panel"]
+layout_mode = 2
+text = "Message!"
+label_settings = SubResource("LabelSettings_d5qyo")
+horizontal_alignment = 1
+vertical_alignment = 1

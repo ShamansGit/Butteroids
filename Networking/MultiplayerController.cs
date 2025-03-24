@@ -4,6 +4,7 @@ using System.IO.Compression;
 
 public partial class MultiplayerController : Control
 {
+	public static MultiplayerController instance;
 	[ExportCategory("Lobby Management")]
 	[Export] Button hostButton;
 	[Export] Button joinButton;
@@ -28,6 +29,7 @@ public partial class MultiplayerController : Control
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		instance = this;
 		nameEdit.Text = CreateRandomName();
 
 		hostButton.Pressed += OnHostPressed;
@@ -48,15 +50,19 @@ public partial class MultiplayerController : Control
 
     private void OnDisconnectButtonPressed()
     {
+		DisconnectFromServer();
+    }
+	
+	private void DisconnectFromServer(){
         peer.Close();
 		UpdateUiState(UIState.NotConnected);
 
-		GameManager.EndGame();
+		if (GameManager.GameRunning) GameManager.EndGame();
 		GameManager.Players.Clear();
 		GameManager.PlayerCount = 0;
 		GameManager.UniquePlayerInstances = 0;
 		PrintStatus("You disconnected from the server!","purple");
-    }
+	}
 
 
     private void OnChatButtonPressed()
@@ -97,8 +103,12 @@ public partial class MultiplayerController : Control
 	/// <param name="id">id of the player that disconnected</param>
     private void PeerDisconnected(long id)
     {
-        PrintStatus("Player Disconnected: " + id.ToString(),"purple");
+        PrintStatus(GameManager.Players[id].Name.Capitalize() + " disconnected! (id:" + id.ToString() + ")","purple");
 		GameManager.RemovePlayer(id);
+		//if the peer that disconnected was the host, disconnect as well.
+		if (id == 1){
+			DisconnectFromServer();
+		}
     }
 
 	/// <summary>
@@ -107,7 +117,7 @@ public partial class MultiplayerController : Control
 	/// <param name="id">id of the player that connects</param>
     private void PeerConnected(long id)
     {
-        PrintStatus("Player Connected: " + id.ToString(),"green");
+        //PrintStatus("Player Connected: " + id.ToString(),"green");
     }
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
@@ -122,11 +132,12 @@ public partial class MultiplayerController : Control
 			Name = name,
 			//if playerInstanceNumber == -1, then use UniquePlayerInstances as number instead
 			//this will ensure a unique player colour for each player
-			color = GameManager.GeneratePlayerColor(playerInstanceNumber == -1 ? GameManager.UniquePlayerInstances : playerInstanceNumber)
+			//color = GameManager.GeneratePlayerColor(playerInstanceNumber == -1 ? GameManager.UniquePlayerInstances : playerInstanceNumber)
 		};
 
 		if (!GameManager.Players.ContainsKey(id)){
 			GameManager.AddPlayer(id,playerInfo);
+			PrintStatus(name.Capitalize() + " joined the game! (id:" + id.ToString() +")" ,"green");
 		}
 
 		if (Multiplayer.IsServer()){
@@ -175,6 +186,12 @@ public partial class MultiplayerController : Control
 		GameManager.StartGame();
 		UpdateUiState(UIState.InGame);
 		Hide();
+	}
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer,CallLocal = true,TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void ReturnToLobby(){
+		GameManager.EndGame();
+		UpdateUiState(UIState.ConnectedAsHost); //todo: ensure this isnt true for clients
+		Show();
 	}
 	public void PrintStatus(string newStatus,string color = "white"){
 		gameLog.Text += "\n[color=" + color +"] > " + newStatus + "[/color]";
