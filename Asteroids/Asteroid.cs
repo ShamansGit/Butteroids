@@ -104,10 +104,10 @@ public partial class Asteroid : Area2D
             Node root = GetParent();
             for (int i = 0; i < chunkCount; i++)
             {
-                float randOffsetSize = (collisionShape.Shape as CircleShape2D).Radius;
+                float radius = (collisionShape.Shape as CircleShape2D).Radius;
                 float spreadAngle = (float)i / (chunkCount - 1) * Mathf.Pi;
                 Vector2 spreadDirection = new Vector2(Mathf.Sin(spreadAngle),Mathf.Cos(spreadAngle));
-                Vector2 spreadOffset = (spreadDirection * randOffsetSize).Normalized();
+                Vector2 spreadOffset = spreadDirection * radius / 2f;
                 if (hitAsteroid is null)
                 {
                     Vector2 newVelocity = (speed * spreadDirection + velocity) / 2f;
