@@ -25,8 +25,8 @@ color = Color(0.00620196, 0.014096, 0.0377485, 1)
 
 [node name="Asteroid Spawner" parent="." instance=ExtResource("1_0f027")]
 spawnFrequency = 2.0
-asteroids = PackedStringArray("res://Asteroids/asteroid_large.tscn", "res://Asteroids/asteroid_medium.tscn")
-asteroidsChance = PackedFloat32Array(0.5, 1)
+asteroids = PackedStringArray("res://Asteroids/asteroid_large.tscn", "res://Asteroids/asteroid_medium.tscn", "res://Asteroids/asteroid_huge.tscn")
+asteroidsChance = PackedFloat32Array(0.5, 1, 0.3)
 maxAsteroids = 50
 
 [node name="World Bounds" type="Node2D" parent="."]
