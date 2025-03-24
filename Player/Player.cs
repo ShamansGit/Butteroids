@@ -45,23 +45,25 @@ public partial class Player : CharacterBody2D
 		node.AddChild(camera);
 		camera.Position = Vector2.Zero;
 	}
-	public override void _PhysicsProcess(double delta)
-	{
-		if (isInvulnerable)
-		{
-			invulnTimer -= (float)delta;
-			//makes the player flash when invulnerable
-			Visible = invulnTimer % 0.2f > 0.1f;
-		}
-		else
-		{
-			Visible = !isDead;
-		}
 
-		//stops you controlling other players
-		if (hasControl) Control(delta);
-	}
-	public void Control(double delta)
+    public override void _Process(double delta)
+    {
+        if (isInvulnerable)
+        {
+            invulnTimer -= (float)delta;
+            //makes the player flash when invulnerable
+            Visible = invulnTimer % 0.2f > 0.1f;
+        }
+        else
+        {
+            Visible = !isDead;
+        }
+
+        //stops you controlling other players
+        if (hasControl) Control(delta);
+    }
+
+    public void Control(double delta)
 	{
 		float rotationInput = Input.GetActionStrength("rotate_right") - Input.GetActionStrength("rotate_left");
 		float thrustInput = Input.GetActionStrength("accelerate");
