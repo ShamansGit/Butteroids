@@ -1,8 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://6nvwgy4x3u14"]
+[gd_scene load_steps=8 format=3 uid="uid://6nvwgy4x3u14"]
 
 [ext_resource type="PackedScene" uid="uid://0vpq4r6i1ffa" path="res://Asteroids/asteroid_spawner.tscn" id="1_0f027"]
+[ext_resource type="Shader" uid="uid://bewq6xf6tfr0y" path="res://StarShader.tres" id="1_d5x1h"]
 [ext_resource type="PackedScene" uid="uid://coa6yw103pv6x" path="res://Networking/match_manager.tscn" id="2_2c62f"]
 [ext_resource type="Shader" uid="uid://cby6qppwkf0p2" path="res://GameShader.tres" id="3_gyfs4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8mm7a"]
+shader = ExtResource("1_d5x1h")
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_d5x1h"]
 
@@ -12,6 +16,7 @@ shader = ExtResource("3_gyfs4")
 [node name="MainScene" type="Node2D"]
 
 [node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_8mm7a")
 offset_left = -875.0
 offset_top = -579.0
 offset_right = 2489.0
