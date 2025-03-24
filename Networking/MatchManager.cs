@@ -63,6 +63,7 @@ public partial class MatchManager : Node2D
         }
     }
     public static void EndMatch(){
+        //todo: There are errors for a few frames here if the host ends before the clients do.
         if (instance.Multiplayer.GetUniqueId() == 1) MultiplayerController.instance.Rpc(nameof(MultiplayerController.ReturnToLobby));
     }
     public static void ShowBannerMessage(string text){
