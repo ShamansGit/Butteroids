@@ -17,7 +17,7 @@ public partial class MatchManager : Node2D
         StartMatch(1);
     }
     public static void StartMatch(int matchNumber){
-        
+        PlayersAlive.Clear();
         int index = 0;
         foreach (var player in GameManager.Players)
         {

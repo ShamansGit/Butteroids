@@ -121,7 +121,8 @@ public partial class Player : CharacterBody2D
 					GD.Print("You Died!");
 					hasControl = false;
 					SetCameraParent(GetParent());
-					GetViewport().GetCamera2D().Zoom = Vector2.One * 0.6f;
+					//zoom to see the whole map
+					GetViewport().GetCamera2D().Zoom = Vector2.One * GetViewportRect().Size.Y / GameManager.instance.mapSize.Y;
 				}
 				invulnTimer = 0;
 				isDead = true;
